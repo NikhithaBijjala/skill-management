@@ -1,0 +1,42 @@
+version: "3.8"
+
+services:
+  mongo:
+    container_name: mongo
+    image: mongo:5
+    restart: always
+    #    environment:
+    #      - MONGO_INITDB_ROOT_USERNAME=<SOME USERNAME>
+    #      - MONGO_INITDB_ROOT_PASSWORD=<SOME PASSWORD>
+    ports:
+      - 27017:27017
+    # expose:
+    #   - 27017
+    volumes:
+      - db:/data/db
+  server:
+    build:
+      dockerfile: Dockerfile
+    image: server
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000 
+      - MONGODB_URL=mongodb://mongo:27017
+      - DB_NAME=Inventory_management
+    depends_on:
+      - mongo 
+   
+  caddy:
+    image: caddy:latest
+    restart: always
+    ports:
+      - "80:80"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config 
+volumes:
+  db:
+  caddy_data:
+  caddy_config:
