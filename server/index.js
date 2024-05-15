@@ -22,17 +22,7 @@ require("dotenv").config({ path: "./config.env" });
 //conn object
 const dbo = require("./db/conn");
 
-const bucketName = "assignemnt2images"
-const region2 = process.env.AWS_BUCKET_REGION
-const accessKeyId = 'AKIA5WBRXX4MMGAWKB4L'
-const secretAccessKey = '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'
-const s3Client = new S3Client({
-  region: "us-east-1",
-  credentials: {
-    accessKeyId,
-    x
-  }
-})
+
 
 
 // parse application/json
@@ -65,25 +55,25 @@ app.use(cors({
 
 const randomName = (bytes = 32) => crypto.randomBytes(bytes).toString('hex')
 
-app.post('/addImage', upload.single("image"), async (req, res) => {
-  console.log("image buffer ", req.file);
-  req.file.buffer
-  const afterResize = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "contain" }).toBuffer()
+// app.post('/addImage', upload.single("image"), async (req, res) => {
+//   console.log("image buffer ", req.file);
+//   req.file.buffer
+//   const afterResize = await sharp(req.file.buffer).resize({ height: 1920, width: 1080, fit: "contain" }).toBuffer()
 
-  const uploadParams = {
-    Bucket: bucketName,
-    Body: afterResize,
-    Key: randomName(),
-    ContentType: req.file.mimetype
-  }
-  var x;
-  await s3Client.send(new PutObjectCommand(uploadParams)).then((data) => x = data)
+//   const uploadParams = {
+//     Bucket: bucketName,
+//     Body: afterResize,
+//     Key: randomName(),
+//     ContentType: req.file.mimetype
+//   }
+//   var x;
+//   await s3Client.send(new PutObjectCommand(uploadParams)).then((data) => x = data)
 
-  console.log("x from server", x.ETag)
+//   console.log("x from server", x.ETag)
 
 
-  res.send(x.ETag)
-});
+//   res.send(x.ETag)
+// });
 
 
 //api call for the addition of 2 numbers 
